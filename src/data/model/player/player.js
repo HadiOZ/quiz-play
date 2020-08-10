@@ -7,7 +7,7 @@ export const SET_CODE = "SET_CODE"
 
 const player = {
     code : '',
-    status: 'panding',
+    status: 'login',
     username: '',
     answer: false,
     score: 0

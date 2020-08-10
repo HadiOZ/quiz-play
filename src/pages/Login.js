@@ -32,7 +32,6 @@ class Login extends Component {
         var value = this.inputRef.current.value
         this.props.setCode(value)
         this.inputRef.current.value = ''
-        console.log("this is value of code" + value)
 
     }
 
@@ -40,7 +39,7 @@ class Login extends Component {
         var nick = this.nicknameRef.current.value
         this.props.setUsername(nick)
         this.nicknameRef.current.value = ''
-        this.props.setStatus('play')
+        this.props.setStatus('panding')
     }
 
 
@@ -57,8 +56,6 @@ class Login extends Component {
     }
     
     render() {
-        console.log(this.props.username)
-        console.log(this.props.code)
         return (
             <Container className="cont-login">
                 <Grid container justify="center">

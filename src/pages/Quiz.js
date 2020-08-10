@@ -48,6 +48,17 @@ class Quiz extends Component {
     }
 
     couterDown() {
+        // for (var i = this.state.time; i > 0; i--) {
+        //     if (this.state.choised === true) {
+        //         return
+        //     }
+        //     setTimeout(() => {
+        //         this.setState({
+        //             time: this.state.time - 1
+        //         })
+        //     }, 1000)
+        // }
+        // this.choise("not choise")
         if (this.state.time > 0 && this.state.choised === false) {
             setTimeout(() => {
                 this.setState({
