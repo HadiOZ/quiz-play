@@ -1,0 +1,12 @@
+.headinfo {
+    position: sticky;
+    background-color: white;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+}
+
+#text-info {
+    font-size: 12pt;
+    font-weight: bold;
+}

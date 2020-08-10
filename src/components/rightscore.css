@@ -1,0 +1,26 @@
+.right-container {
+    padding: 20%;
+    height: 100%;
+    font-size: large;
+}
+
+
+#score {
+    display: block;
+    margin-right: 12px;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+
+#int {
+    display: block;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+#count {
+    display: block;
+    font-size: 50pt;
+    font-weight: bold;
+}

@@ -1,0 +1,26 @@
+
+.main {
+    padding-bottom: 80px;
+    margin: 0;
+    background-color: whitesmoke;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+}
+.head-info {
+    margin-top: 20px;
+}
+
+
+.button-option {
+    border: none;
+    width: 100%;
+    background-color: transparent
+}
+/* .options {
+    background-color: gainsboro;
+} */

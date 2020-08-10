@@ -1,0 +1,42 @@
+.option {
+    
+    cursor: pointer;
+}
+
+.symbol {
+    padding: 15px;
+    padding-top: 7px;
+    height: 100%;
+    /* border-radius: 2px 2px 0 0; */
+}
+
+#symbol-text {
+    color: white;
+    font-weight: bolder;
+    font-size: 24pt;
+}
+
+
+
+.color-a {
+    background-color: #8880FF
+}
+
+.color-b {
+    background-color: #ff315b
+}
+
+.color-c {
+    background-color: #0b2239
+}
+
+.color-d {
+    background-color: #ffd941
+}
+
+.comment {
+    padding: 4px;
+    color: white;
+    background-color: rgb(53, 53, 53);
+    /* border-radius: 2px; */
+}
