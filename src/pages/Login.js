@@ -3,8 +3,6 @@ import { Container, Grid } from '@material-ui/core'
 import './login.css'
 import { faPlay} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { connect } from 'react-redux'
-import { setUsername, setStatus, setCode } from '../data'
 
 class Login extends Component {
     constructor(props) {
@@ -30,16 +28,20 @@ class Login extends Component {
 
     submitHandel() {
         var value = this.inputRef.current.value
-        this.props.setCode(value)
-        this.inputRef.current.value = ''
+        this.setState({
+            code: value
+        }, () => this.nicknameRef.current.value = '')
 
     }
 
     submitNicname() {
         var nick = this.nicknameRef.current.value
-        this.props.setUsername(nick)
-        this.nicknameRef.current.value = ''
-        this.props.setStatus('panding')
+        this.setState({
+            nickname: nick
+        }, () => {
+            this.nicknameRef.current.value = ''
+            this.props.change(this.state.code, this.state.nickname)
+        })
     }
 
 
@@ -64,7 +66,7 @@ class Login extends Component {
                             <img className="logo" src="https://www.gam.com.br/index/wp-content/uploads/2017/10/default-logo.png" alt="logo product" ></img>
                         </Grid>
                     </Grid>
-                    { this.props.code === '' ? <Grid item xs={12}>
+                    { this.state.code === '' ? <Grid item xs={12}>
                         <Grid container justify="center">
                             <div className="bordered">
                                     <input className="code" type='text'  placeholder="room code" ref={this.inputRef} onKeyUp={this.keyUpHandel} />
@@ -92,21 +94,4 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = (state, ownprops) => {
-    // console.log(state.player.username)
-    // console.log(state.player.code)
-    return {
-        username: state.player.username,
-        code: state.player.code
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setUsername: (p) => dispatch(setUsername(p)),
-        setStatus: (p) => dispatch(setStatus(p)),
-        setCode: (p) => dispatch(setCode(p))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps) (Login)
+export default Login

@@ -4,10 +4,8 @@ import { setQuiz, setStatus, setTitle, setAuthor, setDuration, setCategory, setD
 import Quiz from './pages/Quiz';
 import { Provider } from 'react-redux'
 import store from './data/stored';
-//import Result from './pages/Result';
 import CorrectAnswer from './components/CorrectAnswer';
 import WrongAnswer from './components/WrongAnswer';
-import Login from './pages/Login';
 import Axios from 'axios';
 import './root.css'
 import Panding from './pages/Panding'
@@ -19,70 +17,81 @@ class Root extends Component {
         super(props)
     
         this.state = {
-            error: null,
-            isloaded: false,
-            item: {}
+            username: this.props.username,
+            code: this.props.code,
+            socket: null,
+            number: 0
             
         }
+        //this.getQuiz = this.getQuiz.bind(this)
+        // this.onOpen = this.onOpen(this)
+        // this.onClose = this.onClose(this)
+        // this.onError = this.onError(this)
+        // this.onMessage = this.onMessage(this)
     }
 
     componentDidMount() {
-        //fetch("http://117.53.46.220:8000/user?id=MjAyMFFBVUdRNDFRNDExNjA0NjY5").then(res => res.json()).then((result) => {console.log(result)}, (error) => {console.log(error)})
-        // Axios.get("http://117.53.46.220:8000/quizdetail?id=UVVJWi0yMDIwLUFVRy05MTEyMzgyMDg=")
-        //     .then((res) => {
-        //         console.log(res.data[0].questions)
-        //         this.props.setQuiz(res.data[0].questions)
-        //         this.props.setStatus("play")
-        //     })
-        //     .catch(err => console.log(err))
-        // Axios.post("http://117.53.46.220:8000/signin", {
-        //     email: "emailtest@test.com",
-        //     password: "testpassword"
-        // }).then(res => console.log(res)).catch(err => console.log(err))
-        //console.log("didmount dipanggil")
+        var ws = new WebSocket("ws://localhost:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
+        ws.onopen = () => {
+            this.setState({ socket: ws })
+            ws.send(JSON.stringify({
+                from: this.props.username,
+                type: 'ping',
+                message: this.props.username
+            }))
+        }
+        ws.onclose = () => { this.onClose() }
+        ws.onerror = () => { this.onError() }
+        ws.onmessage = (event) => { this.onMessage(event) }
     }
 
+    onOpen() {
+        console.log("websocket open")
+    }
 
-    getQuiz(url) {
-        if (this.props.status === 'panding' && this.props.title === '') {
-            Axios.get(url)
-                .then((res) => {
-                    console.log(res.data[0])
-                    this.props.setQuiz(res.data[0].questions)
-                    this.props.setTitle(res.data[0].title)
-                    this.props.setAuthor(res.data[0].author)
-                    this.props.setDuration(res.data[0].duration)
-                    this.props.setCategory(res.data[0].category)
-                    this.props.setDesc(res.data[0].description)
-                })
-                .catch(err => console.log(err))
+    onClose() {
+        console.log("websocket close")
+    }
+
+    onError() {
+        console.log("websocket error")
+    }
+
+    onMessage(e) {
+        var data = JSON.parse(e.data)
+        switch (data.type) {
+            case "questions":
+                this.getQuiz(data.message)
+                break
+            case "status":
+                this.props.setStatus(data.message.value)
+                this.setState({number: data.message.number})
+                break
+            default:
+                console.log(data.type)
         }
     }
 
-    componentDidUpdate() {
-        if (this.props.status === 'panding' && this.props.title === '') {
-            Axios.get("http://117.53.46.220:8000/quizdetail?id=UVVJWi0yMDIwLUFVRy05MTEyMzgyMDg=")
-                .then((res) => {
-                    this.props.setQuiz(res.data[0].questions)
-                    this.props.setTitle(res.data[0].title)
-                    this.props.setAuthor(res.data[0].author)
-                    this.props.setDuration(res.data[0].duration)
-                    this.props.setCategory(res.data[0].category)
-                    this.props.setDesc(res.data[0].description)
-                    //this.props.setStatus("play")
+    getQuiz(code) {
+        var url = 'http://117.53.46.220:8000/quizdetail?id=' + code
+        Axios.get(url)
+            .then((res) => {
+                this.props.setQuiz(res.data[0].questions)
+                this.props.setTitle(res.data[0].title)
+                this.props.setAuthor(res.data[0].author)
+                this.props.setDuration(res.data[0].duration)
+                this.props.setCategory(res.data[0].category)
+                this.props.setDesc(res.data[0].description)
                 })
-                .catch(err => console.log(err))
-        }
+            .catch(err => console.log(err))
     }
-    
+
     render() {
-        var login = <Provider store={store}><Login /></Provider>
         var panding = <Provider store={store}> <Panding /></Provider>
-        var play = <Provider store={store}><Quiz question={this.props.question[0]} total={this.props.question.length} /></Provider>
+        var play = <Provider store={store}><Quiz question={this.props.question[this.state.number]} socket={this.state.socket} total={this.props.question.length} username={this.props.username} /></Provider>
         var result = this.props.answer ? <CorrectAnswer score={this.props.score} /> : <WrongAnswer score={this.props.score}/>
         return (
             <div>
-                {this.props.status === "login" ? login : null}
                 {this.props.status === "panding" ? panding : null}
                 {this.props.status === "play" ? play : null}
                 {this.props.status === "pause" ? result : null}
@@ -93,6 +102,8 @@ class Root extends Component {
 
 const mapStateToProps = (state, ownprops) => {
     return {
+        code: ownprops.code,
+        username: ownprops.username,
         title: state.quiz.title,
         answer: state.player.answer,
         status: state.player.status,
