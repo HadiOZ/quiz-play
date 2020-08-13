@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Snackbar } from '@material-ui/core'
 import './login.css'
 import { faPlay} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import Axios from 'axios'
+import MuiAlert from '@material-ui/lab/Alert';
 class Login extends Component {
     constructor(props) {
         super(props)
@@ -11,6 +12,8 @@ class Login extends Component {
         this.state = {
             code: '',
             nickname: '',
+            error: false,
+            messageError: ''
         }
 
         this.inputRef = React.createRef()
@@ -20,18 +23,44 @@ class Login extends Component {
         this.keyUpHandel = this.keyUpHandel.bind(this)
         this.submitNicname = this.submitNicname.bind(this)
         this.nickKeyUp = this.nickKeyUp.bind(this)
+        this.handleClose = this.handleClose.bind(this)
+        this.handleOpen = this.handleOpen.bind(this)
     }
-
     codeHandel() {
         console.log(this.inputRef.current.value)
     }
 
+
+    handleClose(event, reason) {
+        if (reason === 'clickaway') {
+          return;
+        }
+
+        this.setState({
+            error: false
+        })
+    }
+
+    handleOpen(message) {
+        this.setState({
+            messageError: message,
+            error: true
+        })
+    }
+
     submitHandel() {
         var value = this.inputRef.current.value
-        this.setState({
-            code: value
-        }, () => this.nicknameRef.current.value = '')
-
+        var url = "http://117.53.46.220:8083/check?code="+value
+        Axios.get(url).then((res) => {
+            console.log(res.data)
+            if (res.data.status === 0) {
+                this.handleOpen(res.data.message)
+            } else {
+                this.setState({
+                    code: value
+                }, () => this.nicknameRef.current.value = '')
+            }
+        })
     }
 
     submitNicname() {
@@ -63,7 +92,7 @@ class Login extends Component {
                 <Grid container justify="center">
                     <Grid item xs={12}>
                         <Grid container justify="center">
-                            <img className="logo" src="https://www.gam.com.br/index/wp-content/uploads/2017/10/default-logo.png" alt="logo product" ></img>
+                            <img className="logo" src={require('../assets/logoquizippy.png')}  alt="logo product" ></img>
                         </Grid>
                     </Grid>
                     { this.state.code === '' ? <Grid item xs={12}>
@@ -86,9 +115,12 @@ class Login extends Component {
                                 </div>
                             </Grid>
                         </Grid>}
-
                 </Grid>
-
+                <Snackbar autoHideDuration={2000} open={this.state.error} onClose={this.handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                    <MuiAlert onClose={this.handleClose} severity="error" elevation={0}>
+                        {this.state.messageError}
+                    </MuiAlert>
+                </Snackbar>
             </Container>
         )
     }

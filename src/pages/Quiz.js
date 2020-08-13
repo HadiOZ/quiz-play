@@ -35,17 +35,21 @@ class Quiz extends Component {
         if (this.props.question.answer === p || this.props.question.answer === q ) {
             this.props.setAnswer(true)
             this.props.setScore(this.state.time * 10)
+            this.sendMessage('answer', {
+                player: this.props.username,
+                score: this.state.time * 10
+            })
         } else {
             this.props.setAnswer(false)
             this.props.setScore(this.state.time * 0)
+            this.sendMessage('answer', {
+                player: this.props.username,
+                score: this.state.time * 0
+            })
         }
         this.props.setStatus("pause")
         this.setState({
             choised : true
-        })
-        this.sendMessage('answer', {
-            player: this.props.username,
-            score: this.state.time * 10
         })
     }
 
@@ -98,14 +102,14 @@ class Quiz extends Component {
         return (
             <div>
                 {this.state.width <= 959 ? <HeadInfo score={this.props.score} time={this.state.time} number={this.props.question.id} total={this.props.total}/> : null}
-            <div className="main">
+                <div className="main">
                 <Grid container spacing={0}>
                     <Grid item xs={12}>
                         <Container>
                             <Grid container justify="center" className="head-info">
                                     {this.state.width <= 959 ? null : <Grid item md={3}><RightScore score={this.props.score} number={this.props.question.id} total={this.props.total}/></Grid>}
                                 <Grid item xs={12} md={6}>
-                                        <QuestionMedia src={this.props.question.media}/>
+                                        { this.props.question.media !== '' ? <QuestionMedia src={this.props.question.media} /> : null}
                                 </Grid>
                                     {this.state.width <= 959 ? null : <Grid item md={3}><LeftTimer time={this.state.time}/></Grid>}
                             </Grid>

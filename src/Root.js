@@ -23,15 +23,10 @@ class Root extends Component {
             number: 0
             
         }
-        //this.getQuiz = this.getQuiz.bind(this)
-        // this.onOpen = this.onOpen(this)
-        // this.onClose = this.onClose(this)
-        // this.onError = this.onError(this)
-        // this.onMessage = this.onMessage(this)
     }
 
     componentDidMount() {
-        var ws = new WebSocket("ws://localhost:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
+        var ws = new WebSocket("ws://117.53.46.220:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
         ws.onopen = () => {
             this.setState({ socket: ws })
             ws.send(JSON.stringify({
@@ -40,7 +35,14 @@ class Root extends Component {
                 message: this.props.username
             }))
         }
-        ws.onclose = () => { this.onClose() }
+        ws.onclose = () => {
+            ws.send(JSON.stringify({
+                from: this.props.username,
+                type: 'ping',
+                message: this.props.username
+            }))
+            this.onClose()
+        }
         ws.onerror = () => { this.onError() }
         ws.onmessage = (event) => { this.onMessage(event) }
     }
@@ -76,9 +78,10 @@ class Root extends Component {
         var url = 'http://117.53.46.220:8000/quizdetail?id=' + code
         Axios.get(url)
             .then((res) => {
+                var author = 'http://117.53.46.220:8000/user?id=' + res.data[0].author
+                Axios.get(author).then((res) => { this.props.setAuthor(res.data.name) }).catch(err => console.log(err))
                 this.props.setQuiz(res.data[0].questions)
                 this.props.setTitle(res.data[0].title)
-                this.props.setAuthor(res.data[0].author)
                 this.props.setDuration(res.data[0].duration)
                 this.props.setCategory(res.data[0].category)
                 this.props.setDesc(res.data[0].description)
