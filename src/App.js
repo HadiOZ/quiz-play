@@ -1,9 +1,9 @@
-
-import { Provider } from 'react-redux'
-import store from './data/stored';
 import Root from './Root';
 import React, { Component } from 'react'
 import Login from './pages/Login';
+//import Finish from './pages/Finish';
+import { Provider } from 'react-redux';
+import store from './data/stored';
 
 class App extends Component {
 
@@ -26,8 +26,8 @@ class App extends Component {
   }
   
   render() {
-    var login = <Login change={this.changeCondition} />
-    var root  = <Provider store={store}><Root code={this.state.code} username={this.state.username}/></Provider>
+    const login = <Login change={this.changeCondition} />
+    const root  = <Provider store={store}><Root code={this.state.code} username={this.state.username}/></Provider>
     return (
       <div>
         {this.state.code === '' && this.state.username === '' ? login : root}

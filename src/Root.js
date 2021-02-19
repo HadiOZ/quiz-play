@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setQuiz, setStatus, setTitle, setAuthor, setDuration, setCategory, setDesc, setID,  } from './data'
+import { setQuiz, setStatus, setTitle, setAuthor, setDuration, setCategory, setDesc, setID, setResult,  } from './data'
 import Quiz from './pages/Quiz';
 import { Provider } from 'react-redux'
 import store from './data/stored';
@@ -9,6 +9,7 @@ import WrongAnswer from './components/WrongAnswer';
 import Axios from 'axios';
 import './root.css'
 import Panding from './pages/Panding'
+import Finish from './pages/Finish';
 
 
 
@@ -20,13 +21,12 @@ class Root extends Component {
             username: this.props.username,
             code: this.props.code,
             socket: null,
-            number: 0
-            
+            number: 0,
         }
     }
 
     componentDidMount() {
-        var ws = new WebSocket("ws://117.53.46.220:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
+        const ws = new WebSocket("ws://117.53.46.220:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
         ws.onopen = () => {
             this.setState({ socket: ws })
             ws.send(JSON.stringify({
@@ -38,7 +38,7 @@ class Root extends Component {
         ws.onclose = () => {
             ws.send(JSON.stringify({
                 from: this.props.username,
-                type: 'ping',
+                type: 'leave',
                 message: this.props.username
             }))
             this.onClose()
@@ -59,23 +59,29 @@ class Root extends Component {
         console.log("websocket error")
     }
 
+   
     onMessage(e) {
-        var data = JSON.parse(e.data)
+        const data = JSON.parse(e.data)
         switch (data.type) {
             case "questions":
                 this.getQuiz(data.message)
                 break
             case "status":
+                console.log(data.message.value)
                 this.props.setStatus(data.message.value)
                 this.setState({number: data.message.number})
                 break
+            case "rank":
+                console.log(data.message)
+                this.props.setResult(data.message)
+                break
             default:
-                console.log(data.type)
+                console.log(data.message)
         }
     }
 
     getQuiz(code) {
-        var url = 'http://117.53.46.220:8000/quizdetail?id=' + code
+        const url = 'http://117.53.46.220:8000/quizdetail?id=' + code
         Axios.get(url)
             .then((res) => {
                 var author = 'http://117.53.46.220:8000/user?id=' + res.data[0].author
@@ -90,14 +96,16 @@ class Root extends Component {
     }
 
     render() {
-        var panding = <Provider store={store}> <Panding /></Provider>
-        var play = <Provider store={store}><Quiz question={this.props.question[this.state.number]} socket={this.state.socket} total={this.props.question.length} username={this.props.username} /></Provider>
-        var result = this.props.answer ? <CorrectAnswer score={this.props.score} /> : <WrongAnswer score={this.props.score}/>
+        const finish = <Provider store={store}><Finish username={this.state.username} /></Provider>
+        const panding = <Provider store={store}> <Panding /></Provider>
+        const play = <Provider store={store}><Quiz question={this.props.question[this.state.number]} socket={this.state.socket} total={this.props.question.length} username={this.props.username} /></Provider>
+        const result = this.props.answer ? <CorrectAnswer score={this.props.score} /> : <WrongAnswer score={this.props.score}/>
         return (
             <div>
                 {this.props.status === "panding" ? panding : null}
                 {this.props.status === "play" ? play : null}
                 {this.props.status === "pause" ? result : null}
+                {this.props.status === "finished" ? finish : null}
             </div>
         )
     }
@@ -125,7 +133,8 @@ const mapDispatchToProps = (dispatch) => {
         setDuration: (p) => dispatch(setDuration(p)),
         setCategory: (p) => dispatch(setCategory(p)),
         setDesc: (p) => dispatch(setDesc(p)),
-        setID: (p) => dispatch(setID(p))
+        setID: (p) => dispatch(setID(p)),
+        setResult: (p) => dispatch(setResult(p))
     }
 }
 

@@ -1,4 +1,4 @@
-import { ADD_SCORE, SET_STATUS, SET_USERNAME, SET_ANSWERED, SET_CODE } from "./player"
+import { ADD_SCORE, SET_STATUS, SET_USERNAME, SET_ANSWERED, SET_CODE, SET_RESULT } from "./player"
 
 
 export const addScore = (score) => {
@@ -33,5 +33,12 @@ export const setCode = (code) => {
     return {
         type: SET_CODE,
         payload: code
+    }
+}
+
+export const setResult = (res) => {
+    return {
+        type: SET_RESULT,
+        payload: res
     }
 }

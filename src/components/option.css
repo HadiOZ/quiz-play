@@ -7,7 +7,7 @@
     padding: 15px;
     padding-top: 7px;
     height: 100%;
-    /* border-radius: 2px 2px 0 0; */
+    border-radius: 8px 8px 0 0;
 }
 
 #symbol-text {
@@ -23,15 +23,15 @@
 }
 
 .color-b {
-    background-color: #ff315b
+    background-color: #ff4e72
 }
 
 .color-c {
-    background-color: #0b2239
+    background-color: #b441ff
 }
 
 .color-d {
-    background-color: #ffd941
+    background-color: #ff9e5d
 }
 
 .comment {

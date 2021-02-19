@@ -1,2 +1,2 @@
-export { addScore, setStatus, setUsername, setAnswer , setCode } from './model/player/playerAction'
+export { addScore, setStatus, setUsername, setAnswer , setCode, setResult } from './model/player/playerAction'
 export {setQuiz, setTitle, setAuthor, setCategory, setDuration, setDesc, setID } from './model/quiz/quizAction'

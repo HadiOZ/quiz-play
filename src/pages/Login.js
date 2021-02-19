@@ -5,6 +5,7 @@ import { faPlay} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Axios from 'axios'
 import MuiAlert from '@material-ui/lab/Alert';
+
 class Login extends Component {
     constructor(props) {
         super(props)
@@ -49,8 +50,8 @@ class Login extends Component {
     }
 
     submitHandel() {
-        var value = this.inputRef.current.value
-        var url = "http://117.53.46.220:8083/check?code="+value
+        const value = this.inputRef.current.value
+        const url = "http://117.53.46.220:8083/check?code="+value
         Axios.get(url).then((res) => {
             console.log(res.data)
             if (res.data.status === 0) {
@@ -64,7 +65,7 @@ class Login extends Component {
     }
 
     submitNicname() {
-        var nick = this.nicknameRef.current.value
+        const nick = this.nicknameRef.current.value
         this.setState({
             nickname: nick
         }, () => {
@@ -84,6 +85,10 @@ class Login extends Component {
         if (event.keyCode === 13) {
             this.submitHandel()
         }
+    }
+
+    componentDidMount() {
+        this.inputRef.current.focus()
     }
     
     render() {

@@ -1,0 +1,15 @@
+#index {
+    background-color: #ffd941;
+}
+
+#text-player {
+    padding: 3px 12px 3px 12px;
+    font-size: 14pt;
+}
+
+
+#text-player-index {
+    padding: 3px;
+    font-size: 14pt;
+    font-weight: bold;
+}

@@ -37,14 +37,16 @@ class Quiz extends Component {
             this.props.setScore(this.state.time * 10)
             this.sendMessage('answer', {
                 player: this.props.username,
-                score: this.state.time * 10
+                score: this.state.time * 10,
+                value: true
             })
         } else {
             this.props.setAnswer(false)
             this.props.setScore(this.state.time * 0)
             this.sendMessage('answer', {
                 player: this.props.username,
-                score: this.state.time * 0
+                score: this.state.time * 0,
+                value: false
             })
         }
         this.props.setStatus("pause")
@@ -72,6 +74,7 @@ class Quiz extends Component {
             message: message
         }
         var msg = JSON.stringify(payload)
+        console.log(message)
         this.props.socket.send(msg)
     }
 
@@ -102,7 +105,6 @@ class Quiz extends Component {
         return (
             <div>
                 {this.state.width <= 959 ? <HeadInfo score={this.props.score} time={this.state.time} number={this.props.question.id} total={this.props.total}/> : null}
-                <div className="main">
                 <Grid container spacing={0}>
                     <Grid item xs={12}>
                         <Container>
@@ -115,8 +117,14 @@ class Quiz extends Component {
                             </Grid>
                         </Container>
                     </Grid>
-                    <Grid item xs={12}>
-                            <Question question={this.props.question.question}/>
+                    <Grid item xs={12} justify="center">
+                        <Container>
+                            <Grid container justify="center">
+                                <Grid item xs={11} md={10}>
+                                    <Question question={this.props.question.question} />
+                                </Grid>
+                            </Grid>
+                        </Container>
                     </Grid>
                     <Grid item xs={12}>
                         <Container>
@@ -145,7 +153,6 @@ class Quiz extends Component {
                         </Container>
                     </Grid>
                 </Grid>
-                </div>
             </div>
         )
     }

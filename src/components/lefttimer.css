@@ -4,6 +4,7 @@
 }
 
 #timer {
+    color: white;
     display: block;
     padding-top: 70px ;
     font-size: 14pt;
@@ -11,6 +12,7 @@
 }
 
 #time {
+    color: white;
     display: block;
     font-size: 60pt;
     font-weight: bold;

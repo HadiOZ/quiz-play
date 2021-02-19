@@ -10,7 +10,7 @@ const HeadInfos = styled(AppBar)({
 
 function HeadInfo(props) {
     return (
-        <HeadInfos position="sticky" color="default">
+        <HeadInfos position="sticky">
             <Toolbar>
                 <Grid container justify="space-between">
                 <Typography id="text-info">
