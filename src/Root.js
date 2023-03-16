@@ -26,7 +26,7 @@ class Root extends Component {
     }
 
     componentDidMount() {
-        const ws = new WebSocket("ws://117.53.46.220:8083/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
+        const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET + "/ws/join?code=" + this.props.code + "&nickname=" + this.props.username)
         ws.onopen = () => {
             this.setState({ socket: ws })
             ws.send(JSON.stringify({
@@ -81,10 +81,10 @@ class Root extends Component {
     }
 
     getQuiz(code) {
-        const url = 'http://117.53.46.220:8000/quizdetail?id=' + code
+        const url = process.env.REACT_APP_API + '/quizdetail?id=' + code
         Axios.get(url)
             .then((res) => {
-                var author = 'http://117.53.46.220:8000/user?id=' + res.data[0].author
+                var author =  process.env.REACT_APP_API + '/user?id=' + res.data[0].author
                 Axios.get(author).then((res) => { this.props.setAuthor(res.data.name) }).catch(err => console.log(err))
                 this.props.setQuiz(res.data[0].questions)
                 this.props.setTitle(res.data[0].title)

@@ -51,7 +51,7 @@ class Login extends Component {
 
     submitHandel() {
         const value = this.inputRef.current.value
-        const url = "http://117.53.46.220:8083/check?code="+value
+        const url = process.env.REACT_APP_HTTP + "/check?code="+value
         Axios.get(url).then((res) => {
             console.log(res.data)
             if (res.data.status === 0) {

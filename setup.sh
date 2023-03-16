@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "REACT_APP_API=$API\nREACT_APP_WEBSOCKET=$WEBSOCKET\nREACT_APP_HTTP=$HTTP" > .env
+npm start
